@@ -24,17 +24,37 @@ public class ReturnDataThread {
 		System.out.println(System.currentTimeMillis());
 		ExecutorService exService = Executors.newFixedThreadPool(3);
 
-		//		Future<Long> outTime = exService.submit(new CallableTask());
-		//		Long outTimeMsg = outTime.get();
-		//		System.out.println(outTimeMsg);
+		// Future is like a promise in JS
+		// Future<Long> outTime = exService.submit(new CallableTask());
+		// Long outTimeMsg = outTime.get();
+		// System.out.println(outTimeMsg);
 
 		List<CallableTask> abc = List.of(new CallableTask(),
 				new CallableTask(), new CallableTask(),
 				new CallableTask(), new CallableTask(), new CallableTask());
+		// Future is like a promise in JS
 		List<Future<Long>> outTime = exService.invokeAll(abc);
 		for (Future<Long> l : outTime) {
 			System.out.println(l.get());
 		}
+
+		exService.shutdown();
+
+		// To get just the first result of multiple threads
+		// It does not continue with the remaining threads
+		exService = Executors.newFixedThreadPool(3);
+
+		// Future<Long> outTime = exService.submit(new CallableTask());
+		// Long outTimeMsg = outTime.get();
+		// System.out.println(outTimeMsg);
+
+		List<CallableTask> newList = List.of(new CallableTask(),
+				new CallableTask(), new CallableTask(), new CallableTask(),
+				new CallableTask(), new CallableTask());
+		Long singleTime = exService.invokeAny(newList);
+
+		System.out.println(singleTime);
+
 		System.out.println("\n Main completed");
 		exService.shutdown();
 	}
